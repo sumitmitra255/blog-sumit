@@ -2,6 +2,13 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import _ from 'lodash'
+import {
+	Container,
+	List,
+	ListItem,
+	ListItemIcon,
+	ListItemText,
+} from '@material-ui/core'
 export const AllPost = (props) => {
 	const [allPost, setAllPost] = useState([])
 	const [username, setUsername] = useState({})
@@ -32,24 +39,24 @@ export const AllPost = (props) => {
 		<>
 			<div>
 				<h1>Total Posts:{allPost.length}</h1>
-				<ul>
+				<Container maxWidth='lg' disableGutters='true'>
 					{username.length
-						? allPost.map((post) => {
+						? allPost.map((post, i) => {
 								// return statement to send props to the showpostinfo component
 								// using lodash to find usernames dynamically
 								return (
-									<li key={post.id}>
-										<Link
-											to={`/posts/${post.id}/${
-												_.find(username, ['id', post.userId]).name
-											}/${post.title}/${post.body}/${post.userId}`}>
-											{post.title}
-										</Link>
-									</li>
+									<Link
+										to={`/posts/${post.id}/${
+											_.find(username, ['id', post.userId]).name
+										}`}>
+										<ListItem button>
+											<ListItemText primary={i + 1 + ')   ' + post.title} />
+										</ListItem>
+									</Link>
 								)
 						  })
 						: 'Loading....'}
-				</ul>
+				</Container>
 			</div>
 		</>
 	)

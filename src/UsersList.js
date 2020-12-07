@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-
+import {
+	Container,
+	List,
+	ListItem,
+	ListItemIcon,
+	ListItemText,
+} from '@material-ui/core'
 export const UsersList = (props) => {
 	const [userdetails, setUserDetails] = useState([])
 	useEffect(() => {
@@ -17,17 +23,21 @@ export const UsersList = (props) => {
 			})
 	}, [])
 	return (
-		<div>
-			<h1>USERS LIST:{userdetails.length}</h1>
-			<ul>
-				{userdetails.map((user) => {
-					return (
-						<li key={user.id}>
-							<Link to={`/users/${user.id}/${user.name}`}>{user.name}</Link>
-						</li>
-					)
-				})}
-			</ul>
-		</div>
+		<>
+			<Container maxWidth='lg' disableGutters='true'>
+				<h1>USERS LIST:{userdetails.length}</h1>
+				<List component='nav' aria-label='main mailbox folders'>
+					{userdetails.map((user, i) => {
+						return (
+							<Link to={`/users/${user.id}/${user.name}`}>
+								<ListItem button>
+									<ListItemText primary={i + 1 + ')  ' + user.name} />
+								</ListItem>
+							</Link>
+						)
+					})}
+				</List>
+			</Container>
+		</>
 	)
 }

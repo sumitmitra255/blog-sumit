@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import {
+	Container,
+	List,
+	ListItem,
+	ListItemIcon,
+	ListItemText,
+} from '@material-ui/core'
 export const ShowPostInfo = (props) => {
-	const { id, username, title, body, userid } = props.match.params
+	const { id, username } = props.match.params
+	const [userPost, setUserPost] = useState([])
 	const [comment, setComment] = useState([])
 	useEffect(() => {
 		// api call to fetch comments
@@ -15,27 +23,41 @@ export const ShowPostInfo = (props) => {
 			.catch((err) => {
 				alert(err.message)
 			})
+		axios
+			.get(`https://jsonplaceholder.typicode.com/posts?id=${id}`)
+			.then((response) => {
+				const result = response.data[0]
+				setUserPost(result)
+			})
+			.catch((err) => {
+				alert(err.message)
+			})
 	}, [id])
-
 	return (
 		<>
-			<div>
+			<Container maxWidth='lg' disableGutters='true'>
 				<h1>User Name :{username}</h1>
-				<h1>Title:{title}</h1>
-				<h2>Body :{body}</h2>
+				<h1>Title:{userPost.title}</h1>
+				<h2>Body :{userPost.body}</h2>
 				<hr />
 				<h1>Comments</h1>
-				<ul>
-					{comment.map((com) => {
-						return <li key={com.id}>{com.body}</li>
+				<List component='nav' aria-label='main mailbox folders'>
+					{comment.map((com, i) => {
+						return (
+							<ListItem button>
+								<ListItemText primary={i + 1 + ' ) ' + com.body} />
+							</ListItem>
+						)
 					})}
-				</ul>
+				</List>
 				<hr />
 				{/* getting a clickable link to reach all posts of the users */}
-				<Link to={`/users/${userid}/${username}`}>
-					More posts of author:{username}
+				<Link to={`/users/${userPost.userId}/${username}`}>
+					<ListItem button>
+						<ListItemText primary={`More posts by Author ${username} `} />
+					</ListItem>
 				</Link>
-			</div>
+			</Container>
 		</>
 	)
 }
